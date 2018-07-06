@@ -1,23 +1,17 @@
 package main
 
 import (
-	"context"
-	"time"
-
+	"github.com/TonPC64/learn-kafka-golang/configs"
 	kafka "github.com/segmentio/kafka-go"
 )
 
 func main() {
-	produce("hello")
+	produce("bello")
 }
 
 func produce(message string) {
-	topic := "test-kafka"
-	partition := 0
-
-	conn, _ := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
-
-	conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+	conn := configs.NewConn()
+	// conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
 	conn.WriteMessages(
 		kafka.Message{Value: []byte(message)},
 	)

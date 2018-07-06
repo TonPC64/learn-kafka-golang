@@ -1,30 +1,29 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"time"
 
-	kafka "github.com/segmentio/kafka-go"
+	"github.com/TonPC64/learn-kafka-golang/configs"
 )
 
 func main() {
 
-	topic := "test-kafka"
-	partition := 0
+	conn := configs.NewConn()
 
-	conn, _ := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
+	conn.SetReadDeadline(time.Now().Add(1 * time.Second))
 
-	conn.SetReadDeadline(time.Now().Add(10 * time.Second))
 	batch := conn.ReadBatch(10e3, 1e6) // fetch 10KB min, 1MB max
-
 	for {
-		b := make([]byte, 10e3) // 10KB max per message
-		_, err := batch.Read(b)
+		message, err := batch.ReadMessage()
 		if err != nil {
 			break
 		}
-		fmt.Println(string(b))
+
+		// blob, _ := json.Marshal(message)
+		fmt.Println(string(message.Value))
+		// fmt.Println(string(blob))
+
 	}
 
 	batch.Close()
