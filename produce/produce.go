@@ -8,6 +8,10 @@ import (
 )
 
 func main() {
+	produce("hello")
+}
+
+func produce(message string) {
 	topic := "test-kafka"
 	partition := 0
 
@@ -15,7 +19,7 @@ func main() {
 
 	conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
 	conn.WriteMessages(
-		kafka.Message{Value: []byte("one!")},
+		kafka.Message{Value: []byte(message)},
 	)
 
 	conn.Close()

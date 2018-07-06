@@ -3,13 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"sync"
 	"time"
 
 	kafka "github.com/segmentio/kafka-go"
 )
 
 func main() {
+
 	topic := "test-kafka"
 	partition := 0
 
@@ -18,8 +18,8 @@ func main() {
 	conn.SetReadDeadline(time.Now().Add(10 * time.Second))
 	batch := conn.ReadBatch(10e3, 1e6) // fetch 10KB min, 1MB max
 
-	b := make([]byte, 10e3) // 10KB max per message
 	for {
+		b := make([]byte, 10e3) // 10KB max per message
 		_, err := batch.Read(b)
 		if err != nil {
 			break
@@ -27,6 +27,6 @@ func main() {
 		fmt.Println(string(b))
 	}
 
-	wg := &sync.WaitGroup{}
-	wg.Add(1)
+	batch.Close()
+	conn.Close()
 }
