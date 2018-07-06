@@ -9,7 +9,7 @@ import (
 
 func main() {
 	topic := "test-kafka"
-	partition := 1
+	partition := 0
 
 	conn, _ := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
 

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"sync"
 	"time"
 
 	kafka "github.com/segmentio/kafka-go"
@@ -10,7 +11,7 @@ import (
 
 func main() {
 	topic := "test-kafka"
-	partition := 1
+	partition := 0
 
 	conn, _ := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", topic, partition)
 
@@ -26,6 +27,6 @@ func main() {
 		fmt.Println(string(b))
 	}
 
-	batch.Close()
-	conn.Close()
+	wg := &sync.WaitGroup{}
+	wg.Add(1)
 }
